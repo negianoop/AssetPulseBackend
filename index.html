@@ -1,0 +1,213 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dynamic Grid Builder</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f9f9f9;
+    }
+
+    .grid {
+      display: grid;
+      gap: 15px;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+
+    .grid-item {
+      background: #fff;
+      border-radius: 6px;
+      height: 120px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.2rem;
+      color: #333;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      cursor: pointer;
+    }
+
+    .grid-item.plus {
+      font-size: 2rem;
+      color: #888;
+      background: #f0f0f0;
+    }
+
+    .popup-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .popup {
+      background: #fff;
+      padding: 25px;
+      border-radius: 8px;
+      width: 300px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      position: relative;
+    }
+
+    .popup h3 {
+      margin-top: 0;
+    }
+
+    .popup input, .popup button {
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      font-size: 1rem;
+    }
+
+    .popup button {
+      background: #1890ff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .popup button:hover {
+      background: #096dd9;
+    }
+
+    .popup-close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      cursor: pointer;
+      font-size: 20px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Dynamic Grid</h2>
+
+<div class="grid" id="grid">
+  <!-- Grid items will be injected here -->
+</div>
+
+<!-- Popup Form -->
+<div class="popup-overlay" id="popupOverlay">
+  <div class="popup">
+    <span class="popup-close" id="popupClose">&times;</span>
+    <h3>Add Port</h3>
+
+    <input type="number" id="inputId" placeholder="ID (integer)" />
+    <input type="text" id="inputPortNumber" placeholder="Port Number" />
+    <input type="number" id="inputPowerSocket" placeholder="Power Socket (integer)" />
+    <label>
+      <input type="checkbox" id="inputPortStatus" />
+      Port Status (checked = true)
+    </label>
+    <input type="text" id="inputOther" placeholder="Other (optional)" />
+
+    <button id="submitItem">Submit</button>
+  </div>
+</div>
+
+<script>
+  const grid = document.getElementById('grid');
+  const popupOverlay = document.getElementById('popupOverlay');
+  const popupClose = document.getElementById('popupClose');
+  const submitButton = document.getElementById('submitItem');
+  const itemNameInput = document.getElementById('itemName');
+
+  let items = []; // This will store grid items
+
+  // Render the grid
+  function renderGrid() {
+    grid.innerHTML = '';
+
+    // Render existing items
+    items.forEach((item, index) => {
+      const div = document.createElement('div');
+      div.className = 'grid-item';
+      div.textContent = item.name;
+      grid.appendChild(div);
+    });
+
+    // Add the "+" button at the end
+    const plusItem = document.createElement('div');
+    plusItem.className = 'grid-item plus';
+    plusItem.textContent = '+';
+    plusItem.onclick = () => openPopup();
+    grid.appendChild(plusItem);
+  }
+
+  // Open popup
+  function openPopup() {
+    popupOverlay.style.display = 'flex';
+    itemNameInput.value = '';
+    itemNameInput.focus();
+  }
+
+  // Close popup
+  function closePopup() {
+    popupOverlay.style.display = 'none';
+  }
+
+  popupClose.onclick = closePopup;
+  popupOverlay.onclick = (e) => {
+    if (e.target === popupOverlay) closePopup();
+  };
+
+  // Submit new item
+ 
+  submitButton.onclick = async () => {
+	  const id = parseInt(document.getElementById('inputId').value);
+	  const port_number = parseInt(document.getElementById('inputPortNumber').value);
+	  const power_socket = parseInt(document.getElementById('inputPowerSocket').value);
+	  const port_status = document.getElementById('inputPortStatus').checked;
+	  const other = document.getElementById('inputOther').value.trim();
+
+	  if (isNaN(id) || isNaN(power_socket) || !port_number) {
+		  alert('Please fill all required fields with valid data');
+		  return;
+	  }
+
+	  const newItem = {
+		  id,
+		  port_number,
+		  power_socket,
+		  port_status,
+		  other
+	  };
+
+	  try {
+		  const response = await fetch('http://192.168.0.125:5000/board', {
+			  method: 'POST',
+			  headers: { 'Content-Type': 'application/json' },
+			  body: JSON.stringify(newItem)
+		  });
+
+		  if (!response.ok) {
+			  throw new Error('Failed to add item');
+		  }
+
+		  const result = await response.json();
+		  items.push(result);
+		  renderGrid();
+		  closePopup();
+	  } catch (error) {
+		  alert('Error: ' + error.message);
+	  }
+  };
+
+  // Initial render
+  renderGrid();
+</script>
+
+</body>
+</html>
+
