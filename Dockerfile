@@ -17,7 +17,7 @@ RUN dotnet publish "AssetPulse.csproj" -c Release -o /app/publish
 # Stage 3: Run the application
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 ENV ASPNETCORE_HTTP_PORTS=5000
-EXPOSE 5000:5000
+EXPOSE 5000
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "AssetPulse.dll"]
