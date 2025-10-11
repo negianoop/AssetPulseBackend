@@ -23,10 +23,10 @@ app.MapGet("/", () => {
     using var connection = new SqliteConnection("Data Source=AssetPulse"); 
     connection.Open(); 
     var command = connection.CreateCommand(); 
-    command.CommandText = @"select * from Component"; 
+    command.CommandText = @"select * from board"; 
 
     using var reader = command.ExecuteReader(); 
-    return Results.File(@"/home/anoopnegi123a/Dev/dotnet/AssetPulse/frontend/index.html","text/html");    
+    return Results.Ok("hello world");    
 });
 
 app.MapGet("/board", () =>
