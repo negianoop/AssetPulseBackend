@@ -11,7 +11,7 @@ COPY . .
 RUN dotnet build "AssetPulse.csproj" -c Release -o /app/build
 
 # publish
-FROM build as publish
+FROM build AS publish
 RUN dotnet publish "AssetPulse.csproj" -c Release -o /app/publish
 
 # Stage 3: Run the application
@@ -21,4 +21,3 @@ EXPOSE 5000:5000
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "AssetPulse.dll"]
-EXPOSE 5000
