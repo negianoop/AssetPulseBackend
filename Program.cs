@@ -23,6 +23,9 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 app.UseCors("AllowAll");
 
+Console.WriteLine(builder.Configuration.GetConnectionString("DefaultConnection"));
+
+
 app.MapGet("/", () => {
     using var connection = new NpgsqlConnection(connectionString); 
     connection.Open(); 
