@@ -20,7 +20,7 @@ var app = builder.Build();
 app.UseCors("AllowAll");
 
 app.MapGet("/", () => {
-    using var connection = new NpgsqlConnection("postgresql://assetpulseatpostgres_user:QWmMQlTDonOloS2irvnQdp6CoEsvA8mg@dpg-d3majjqdbo4c73bmq0g0-a.singapore-postgres.render.com/assetpulseatpostgres"); 
+    using var connection = new NpgsqlConnection(DefaultConnection); 
     connection.Open(); 
     var command = connection.CreateCommand(); 
     command.CommandText = @"select * from board"; 
@@ -33,7 +33,7 @@ app.MapGet("/board", () =>
 {
     var list = new List<Dictionary<string, object>>();
 
-    using (var connection = new NpgsqlConnection("postgresql://assetpulseatpostgres_user:QWmMQlTDonOloS2irvnQdp6CoEsvA8mg@dpg-d3majjqdbo4c73bmq0g0-a.singapore-postgres.render.com/assetpulseatpostgres"))
+    using (var connection = new NpgsqlConnection(DefaultConnection))
     {
         connection.Open();
 
@@ -71,7 +71,7 @@ app.MapPost("/board",async (HttpRequest request) => {
    var other = body.GetProperty("other").GetString(); 
    var ip_address = body.GetProperty("ip_address").GetString(); 
    
-   using var connection = new NpgsqlConnection("postgresql://assetpulseatpostgres_user:QWmMQlTDonOloS2irvnQdp6CoEsvA8mg@dpg-d3majjqdbo4c73bmq0g0-a.singapore-postgres.render.com/assetpulseatpostgres");
+   using var connection = new NpgsqlConnection(DefaultConnection);
    connection.Open();  
    var command = connection.CreateCommand(); 
    command.CommandText = @"insert into board values($id, $port_number, $power_socket, $port_status, $other, $ip_address)";
@@ -111,7 +111,7 @@ app.MapGet("/delete/{id}", async (HttpRequest request) => {
      return Results.BadRequest("Invalid id");
 	}
   
-  using var connection = new NpgsqlConnection("postgresql://assetpulseatpostgres_user:QWmMQlTDonOloS2irvnQdp6CoEsvA8mg@dpg-d3majjqdbo4c73bmq0g0-a.singapore-postgres.render.com/assetpulseatpostgres"); 
+  using var connection = new NpgsqlConnection(DefaultConnection); 
   connection.Open(); 
   var command = connection.CreateCommand(); 
   command.CommandText = @"delete from board where id = $id"; 
