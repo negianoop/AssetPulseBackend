@@ -22,7 +22,7 @@ var app = builder.Build();
 app.UseCors("AllowAll");
 
 app.MapGet("/", () => {
-    using var connection = new NpgsqlConnection(DefaultConnection); 
+    using var connection = new NpgsqlConnection(connectionString); 
     connection.Open(); 
     var command = connection.CreateCommand(); 
     command.CommandText = @"select * from board"; 
