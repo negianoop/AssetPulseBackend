@@ -4,7 +4,7 @@ using System.Text.Json;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
 builder.WebHost.UseUrls("http://0.0.0.0:5000");
 builder.Services.AddCors(options =>
 {
@@ -18,6 +18,8 @@ builder.Services.AddCors(options =>
 
 
 var app = builder.Build();
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 app.UseCors("AllowAll");
 
