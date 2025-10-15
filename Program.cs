@@ -22,9 +22,9 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
 app.UseCors("AllowMultipleOrigins");
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 app.MapGet("/", () => {
     using var connection = new NpgsqlConnection(connectionString); 
