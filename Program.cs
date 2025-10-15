@@ -6,14 +6,18 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
 builder.WebHost.UseUrls("http://0.0.0.0:5000");
+string[] allowedOrigins = new[]
+{
+    "https://5173-cs-5fc35ef0-8e76-44a3-a5a9-6ca19b688c36.cs-asia-southeast1-bool.cloudshell.dev",
+    "https://assetpulse.netlify.app/"
+};
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", policy =>
-    {
-        policy.AllowAnyOrigin()  // Allow all origins (you can specify more restrictive policies)
-              .AllowAnyMethod()  // Allow all HTTP methods
-              .AllowAnyHeader(); // Allow all headers
-    });
+    options.AddPolicy("AllowMultipleOrigins", policy =>
+        policy.WithOrigins(allowedOrigins)
+              .AllowAnyMethod()
+              .AllowAnyHeader());
 });
 
 
@@ -21,7 +25,7 @@ var app = builder.Build();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-app.UseCors("AllowAll");
+app.UseCors("AllowMultipleOrigins");
 
 app.MapGet("/", () => {
     using var connection = new NpgsqlConnection(connectionString); 
