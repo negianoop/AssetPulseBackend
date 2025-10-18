@@ -83,15 +83,18 @@ app.MapPost("/board",async (HttpRequest request) => {
    using var connection = new NpgsqlConnection(connectionString);
    connection.Open();  
    var command = connection.CreateCommand(); 
-   command.CommandText = @"insert into board (id, port_number, ip_address, port_status, other, power_socket) 
-                            values($1, $2, $3, $4, $5, $6)";
+   command.CommandText = @"
+        INSERT INTO board (id, port_number, ip_address, port_status, other, power_socket) 
+        VALUES (@id, @port_number, @ip_address, @port_status, @other, @power_socket)";  // Using named parameters
     
-    command.Parameters.AddWithValue("$1", id);
-    command.Parameters.AddWithValue("$2", port_number);
-    command.Parameters.AddWithValue("$3", ip_address);
-    command.Parameters.AddWithValue("$4", port_status); 
-    command.Parameters.AddWithValue("$5", other);  
-    command.Parameters.AddWithValue("$6", power_socket); 
+    // Binding parameters to the query
+    command.Parameters.AddWithValue("@id", id);
+    command.Parameters.AddWithValue("@port_number", port_number);
+    command.Parameters.AddWithValue("@ip_address", ip_address);
+    command.Parameters.AddWithValue("@port_status", port_status); 
+    command.Parameters.AddWithValue("@other", other);  
+    command.Parameters.AddWithValue("@power_socket", power_socket);
+ 
    command.ExecuteNonQuery();
    return Results.Ok("got in database");   
 }); 
