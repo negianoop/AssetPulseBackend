@@ -7,7 +7,6 @@ builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnC
 
 string[] allowedOrigins = new[]
 {
-    "https://5173-cs-5fc35ef0-8e76-44a3-a5a9-6ca19b688c36.cs-asia-southeast1-bool.cloudshell.dev",
     "https://assetpulse.netlify.app"
 };
 
