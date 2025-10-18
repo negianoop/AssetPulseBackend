@@ -58,7 +58,7 @@ app.MapGet("/board", () =>
                 row["id"] = reader.GetInt32(0);
                 row["port_number"] = reader.GetInt32(1);
                 row["ip_address"] = reader.GetString(2);
-                row["port_status"] = reader.GetString(3).ToLower() == "t";
+                row["port_status"] = reader.GetInt32(3) == 1 ? true : false;
                 row["other"] = reader.GetString(4);
                 row["power_socket"] = reader.GetInt32(5);
 
