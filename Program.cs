@@ -7,7 +7,8 @@ builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnC
 
 string[] allowedOrigins = new[]
 {
-    "https://assetpulse.netlify.app"
+    "https://assetpulse.netlify.app",
+    "http://localhost:5173""
 };
 
 builder.Services.AddCors(options =>
