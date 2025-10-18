@@ -47,7 +47,7 @@ app.MapGet("/board", () =>
         connection.Open();
 
         var command = connection.CreateCommand();
-        command.CommandText = @"SELECT id, port_number, ip_address, power_socket, port_status, other FROM board";
+        command.CommandText = @"SELECT id, port_number, ip_address, port_status, other, power_socket FROM board";
 
         using (var reader = command.ExecuteReader())
         {
@@ -58,7 +58,7 @@ app.MapGet("/board", () =>
                 row["id"] = reader.GetInt32(0);
                 row["port_number"] = reader.GetInt32(1);
                 row["ip_address"] = reader.GetString(2);
-                row["port_status"] = reader.GetInt32(3) == 1 ? true : false;
+                row["port_status"] = reader.GetBoolean(3);
                 row["other"] = reader.GetString(4);
                 row["power_socket"] = reader.GetInt32(5);
 
