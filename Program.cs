@@ -9,7 +9,8 @@ string[] allowedOrigins = new[]
 {
     "https://assetpulse.netlify.app",
     "http://localhost:5173", 
-    "https://5173-cs-5fc35ef0-8e76-44a3-a5a9-6ca19b688c36.cs-asia-southeast1-bool.cloudshell.dev:5173"
+    "https://5173-cs-5fc35ef0-8e76-44a3-a5a9-6ca19b688c36.cs-asia-southeast1-bool.cloudshell.dev:5173",
+    "https://5173-cs-5fc35ef0-8e76-44a3-a5a9-6ca19b688c36.cs-asia-southeast1-bool.cloudshell.dev"
 };
 
 builder.Services.AddCors(options =>
